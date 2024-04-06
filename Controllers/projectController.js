@@ -61,7 +61,7 @@ exports.getAllProjects = async (req, res) => {
     const query = {
         language: {
              $regex: searchKey, $options: 'i'
-        }
+        } 
    }
     try {
         const allProjects = await projects.find(query)

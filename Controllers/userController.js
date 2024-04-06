@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 exports.register = async (req, res) => {
   console.log("Inside register function");
 
-  const { username, email, password } = req.body
+  const { username, email, password , github , link } = req.body
 
   try {
     //if check the email is alraedy in db-> user already registered
@@ -27,7 +27,7 @@ exports.register = async (req, res) => {
   catch (err) {
     res.status(500).json("server error: " + err.message)
   }
-  console.log(`${username} ${email} ${password}`);
+  console.log(`${username} ${email} ${password} ${github} ${link}`);
 
 }
 
