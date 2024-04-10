@@ -3,34 +3,35 @@ const users = require('../Models/userSchema')
 //import jwt token
 const jwt = require('jsonwebtoken')
 
-//register logic
 exports.register = async (req, res) => {
-  console.log("Inside register function");
-
-  const { username, email, password , github , link } = req.body
+  const { username, email, password, github, link } = req.body;
 
   try {
-    //if check the email is alraedy in db-> user already registered
-    const existingUser = await users.findOne({ email })
-    if (existingUser) {
-      res.status(401).json("user already registered")
-    }
-    //if the email is not present in db-> new user will save to the database
-    else {
-      const newuser = await users({
-        username, email, password, github: '', link: "", profile: ""
-      })
-      await newuser.save()//save new user data to database
-      res.status(200).json("user registration succesful")
-    }
-  }
-  catch (err) {
-    res.status(500).json("server error: " + err.message)
-  }
-  console.log(`${username} ${email} ${password} ${github} ${link}`);
+      // Check if the email or github is already in use
+      const existingUser = await users.findOne({ email });
+      if (existingUser) {
+          return res.status(400).json({ error: 'Email or Github already in use' });
+      }
 
-}
+      // Create a new user
+      const newUser = new users({
+          username,
+          email,
+          password,
+          github,
+          link,
+          profile:""
+      });
 
+      // Save the user to the database
+      await newUser.save();
+
+      res.status(201).json({ message: 'User registered successfully', user: newUser });
+  } catch (error) {
+      console.error('Error registering user:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 //login logic
 exports.login = async (req, res) => {
   console.log("Inside login function");
